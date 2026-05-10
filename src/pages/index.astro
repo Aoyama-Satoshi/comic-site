@@ -5,10 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>英語四コマ漫画サイト</title>
 </head>
-<body>
-    <h1>英語四コマ漫画サイト</h1>
-    <p>このサイトは、四コマ漫画で英語を学習することができます。</p>
-    <a href="/manga-list">英語四コマ一覧</a>
-    <a href="/about">このサイトについて</a>
+<body class="index-background-image">
+    <header>
+        <h1>英語四コマ漫画サイト</h1>
+        <p>このサイトは、四コマ漫画で英語を学習することができます。</p>
+    </header>
+    <main>
+        <a href="/manga-list" class="button">英語四コマ一覧</a>
+        <a href="/about" class="button">このサイトについて</a>
+    </main>
+    <footer>
+        <small>© English Manga Site</small>
+    </footer>
 </body>
 </html>
+
+<style>
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background-image: url('/images/simple.jpeg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: 0;
+        padding: 20px;
+    }
+
+	main {
+        margin: 0;
+        padding: 20px;
+		min-height: 100dvh;
+		background-image: url('/images/index-background-image.png');
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+
+    footer {
+        background: #707070;
+        margin: 0;
+        padding: 12px 20px;
+    }
+
+    h1,
+    p {
+        margin-top: 0;
+    }
+
+    .button {
+  display: inline-block;
+  padding: 10px 18px;
+
+  border: 2px solid black;
+  border-radius: 999px;
+
+  text-decoration: none;
+  color: black;
+
+  font-weight: bold;
+  }
+</style>

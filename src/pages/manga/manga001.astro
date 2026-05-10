@@ -1,75 +1,28 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>英語四コマ漫画1</title>
-</head>
-<body>
-    <h1>[001]</h1>
-    <div class="manga-item">
-        <img src="/images/manga001.png" alt="漫画1の表紙" />
-        <div class="description">
-          <details class="description-toggle">
-            <summary>Description</summary>
-            <p class="description-text">
-              I haard Singapore has its own kind of English called ”Singlish”.<br>
-              シンガポール独自の英語はシンガリッシュというらしい<br>
-              <br>
-              So... is mine "Japanish"?<br>
-              じゃあ俺は”ジャパニッシュ”？<br>
-              <br>
-              Then I'm speaking "Nepalish".<br>
-              そしたら俺は”ネパリッシュ”を喋っているのか<br>
-              <br>
-              Well, I'm from England... so I guess mine is "English".<br>
-              えーと、俺はイングランド出身...つまり俺の英語は”イングリッシュ”ってわけだな
-            </p>
-          </details>
-        </div>
-      </div>
-      
-      <style>
-        h1 {
-          text-align: center;
-          font-size: 48px;
-        }
+---
+import Layout from '../../layouts/Layout.astro';
+---
 
-        .manga-item {
-          display: flex;         /* 画像と文字を横並びにする */
-          gap: 16px;            /* 画像と文字の間隔 */
-          align-items: flex-start; /* 画像と文字を上下中央揃えにする */
-        }
-      
-        .manga-item img {
-          width: 50%;         /* 好きなサイズに調整 */
-          height: auto;
-          border-radius: 8px;
-        }
-      
-        .description {
-          max-width: 500px;
-        }
-
-        .description p {
-          font-size: 12px; /* 文字サイズ */
-          line-height: 1.5; /* 行間 */
-        }
-
-        .description-toggle summary {
-          display: inline-block;
-          font-size: 16px;
-          padding: 8px 12px;
-          border: 1px solid #999;
-          border-radius: 6px;
-          background: #f3f3f3;
-          cursor: pointer;
-          list-style: none;
-        }
-
-        .description-text {
-          margin-top: 12px;
-        }
-      </style>
-</body>
-</html>
+<Layout title="英語四コマ漫画1" lang="ja" pageClass="manga-page">
+  <h1>[001]</h1>
+  <div class="manga-item">
+    <img src="/images/manga001.png" alt="漫画1の表紙" />
+    <div class="description">
+      <details class="description-toggle">
+        <summary>Description</summary>
+        <p class="description-text">
+          I haard Singapore has its own kind of English called "Singlish".<br>
+          シンガポール独自の英語はシンガリッシュというらしい<br>
+          <br>
+          So... is mine "Japanish"?<br>
+          じゃあ俺は"ジャパニッシュ"？<br>
+          <br>
+          Then I'm speaking "Myanglish".<br>
+          そしたら俺は"ミャングリッシュ"を喋っているのか<br>
+          <br>
+          Well, I'm from England... so I guess mine is "English".<br>
+          えーと、俺はイングランド出身...つまり俺の英語は"イングリッシュ"ってわけだな
+        </p>
+      </details>
+    </div>
+  </div>
+</Layout>
