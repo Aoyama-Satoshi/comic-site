@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI英文生成学習</title>
+</head>
+<body>
+    <header>
+        <a href="/">英語四コマ漫画サイト</a>
+    </header>
+    <h1>苦手単語から英文を生成</h1>
+    
+    <div>
+      <textarea
+        id="word-input"
+        style="width: min(100%, 42rem); min-height: 6rem; box-sizing: border-box; resize: vertical;"
+        placeholder="覚えたい単語をカンマ区切りで入力してください（例: apple, orange）"
+      ></textarea>
+    </div>
+    
+    <button id="generate-btn">英文を生成する</button>
+    
+    <div id="result-area" style="margin-top: 20px; border: 1px solid #ccc; padding: 10px; min-height: 100px;">
+      ここにAIが生成した英文が表示されます。
+    </div>
+
+    <script>
+      // フロントエンドからは本物のキーを完全に抹消（ダミーでチェックを通過）
+      const apiKey = "dummy_key_secured_by_backend";
+      const modelOverride = "";
+
+      /** 無料枠で使いやすい順 */
+      const MODELS = [
+        ...(modelOverride ? [modelOverride] : []),
+        "gemini-1.5-flash", 
+        "gemini-2.5-flash-lite",
+        "gemini-2.0-flash-lite",
+        "gemini-2.5-flash",
+        "gemini-2.0-flash",
+      ].filter((m, i, a) => m && a.indexOf(m) === i);
+
+      function sleep(ms: number): Promise<void> {
+        return new Promise((r) => setTimeout(r, ms));
+      }
+
+      function parseRetryAfterMs(message: string): number | null {
+        const m = message.match(/Please retry in ([\d.]+)\s*s/i);
+        if (!m) return null;
+        const sec = Math.ceil(parseFloat(m[1])) + 2;
+        if (!Number.isFinite(sec)) return null;
+        return Math.min(sec * 1000, 120_000);
+      }
+
+      function extractText(data: Record<string, unknown>): string | undefined {
+        const gen = data as {
+          candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+        };
+        return gen.candidates?.[0]?.content?.parts?.[0]?.text;
+      }
+
+      async function postGenerate(model: string, body: string): Promise<{ ok: boolean; data: Record<string, unknown>; res: Response }> {
+        // 💡 Googleではなく、さっき作った「自分のサイトの裏口」を叩く！
+        const url = "/api/generate?model=" + encodeURIComponent(model);
+          
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" }, // Astroの開発サーバーのバグを回避するプレーンテキスト送信
+          body,
+        });
+
+        const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+        return { ok: res.ok, data, res };
+      }
+
+      document.getElementById("generate-btn")?.addEventListener("click", async () => {
+        const wordInputEl = document.getElementById("word-input");
+        const resultArea = document.getElementById("result-area");
+        const generateBtn = document.getElementById("generate-btn");
+
+        if (!(wordInputEl instanceof HTMLTextAreaElement)) return;
+        if (!resultArea) return;
+        if (!(generateBtn instanceof HTMLButtonElement)) return;
+
+        const words = wordInputEl.value.trim();
+
+        if (!apiKey) {
+          resultArea.textContent = "エラー: APIキーがありません";
+          return;
+        }
+
+        if (!words) {
+          resultArea.textContent = "単語を入力してください。";
+          return;
+        }
+
+        resultArea.textContent = "生成中...";
+        generateBtn.disabled = true;
+
+        const prompt = `以下の単語をすべて使って、中学生レベルの英語で30語程度の物語を作ってください。単語：${words}`;
+        const body = JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 768 },
+        });
+
+        try {
+          let lastMessage = "";
+
+          for (const model of MODELS) {
+            let { ok, data, res } = await postGenerate(model, body);
+
+            if (!ok) {
+              const errObj = data.error as { message?: string } | undefined;
+              const msg = errObj?.message ?? `${res.status}`;
+              const waitMs = parseRetryAfterMs(msg);
+              if (waitMs !== null) {
+                await sleep(waitMs);
+                ({ ok, data, res } = await postGenerate(model, body));
+              }
+            }
+
+            if (ok) {
+              const text = extractText(data);
+              if (text) {
+                resultArea.textContent = text;
+                return;
+              }
+              lastMessage = "空の応答";
+            } else {
+              const errObj = data.error as { message?: string } | undefined;
+              lastMessage = errObj?.message ?? `${res.status}`;
+            }
+          }
+
+          resultArea.textContent = `エラー: ${lastMessage}`;
+        } catch (err) {
+          resultArea.textContent = `エラー: ${err instanceof Error ? err.message : String(err)}`;
+        } finally {
+          generateBtn.disabled = false;
+        }
+      });
+    </script>
+</body>
+</html>
