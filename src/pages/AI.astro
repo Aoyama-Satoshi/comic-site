@@ -9,7 +9,15 @@
     <header>
         <a href="/">英語四コマ漫画サイト</a>
     </header>
-    <h1>苦手単語から英文を生成</h1>
+    <div class="title-container">
+  
+        <div class="ai-neon-box">
+          <span>AI</span>
+        </div>
+      
+        <h1>苦手単語から英文を生成</h1>
+      
+      </div>
     
     <div>
       <textarea
@@ -142,3 +150,149 @@
     </script>
 </body>
 </html>
+
+<style>
+    body {
+        background-color: #0e2136;
+    }
+
+    h1 {
+        color: rgb(255, 255, 255);
+    }
+
+/* 入力エリア（textarea）のサイバー化 */
+textarea#word-input {
+  width: min(100%, 42rem);
+  min-height: 6rem;
+  box-sizing: border-box;
+  resize: vertical;
+  
+  padding: 14px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #0f172a; /* 深みのあるダークネイビー */
+  border: 2px solid #1e293b;   /* 目立ちすぎない落ち着いた枠線 */
+  border-radius: 12px;         /* アイコンに合わせたカド丸 */
+  outline: none;
+  transition: all 0.3s ease;   /* 変化を滑らかに */
+}
+
+/* テキストエリアにカーソルが入った時（フォーカス時）のネオン発光 */
+textarea#word-input:focus {
+  border-color: #00c3ff;       /* アイコンと同じ水色に光る */
+  box-shadow: 0 0 12px rgba(0, 195, 255, 0.2); /* じわっと発光 */
+}
+
+/* ボタンをイケてるフラットデザインにする */
+button#generate-btn {
+  background: linear-gradient(135deg, #00c3ff, #4d0199); /* アイコンと合わせたグラデ */
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ボタンにマウスを乗せた時 */
+button#generate-btn:hover {
+  transform: translateY(-1px); /* わずかに浮き上がる */
+  box-shadow: 0 4px 15px rgba(0, 195, 255, 0.4);
+}
+
+/* 生成結果の表示エリア（結果ボックス） */
+div#result-area {
+  margin-top: 24px;
+  background-color: #0b111e;  /* アイコンの中身と同じ、さらに深い黒 */
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 20px;
+  color: #e5e7eb;
+  line-height: 1.6;
+  font-size: 16px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5); /* 内側に少し影を入れて凹ませる */
+  letter-spacing: 0.03em;    /* 文字と文字の間をほんの少し広げて読みやすく */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 英文が圧倒的に綺麗に見えるモダンフォント */
+}
+
+    /* 1. 横並び＆センター揃えの魔法 */
+  .title-container {
+    display: flex;
+    align-items: center; /* 上下の中央揃え */
+    gap: 20px;          /* アイコンと文字の間のすき間 */
+    margin: 20px 0;     /* 上下の余白 */
+  }
+
+  /* 2. ネオンアイコン本体の土台（動画の .box に相当） */
+  .ai-neon-box {
+    position: relative;
+    width: 50px;         /* アイコンとして適切なサイズ */
+    height: 50px;
+    background: #0b111e; /* 中身の背景（ダークな色） */
+    border-radius: 12px; /* カド丸 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;   /* 光を外に漏らすためにvisibleにする */
+    border-radius: 12px;
+  }
+
+  /* アイコンの中の「AI」という文字のデザイン */
+  .ai-neon-box span {
+    color: #fff;
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 1px;
+    z-index: 1;          /* 光る背景より前に出す */
+  }
+
+  /* 3. 動画のトリック：回転するグラデーション（背面） */
+  .ai-neon-box::before,
+  .ai-neon-box::after {
+    content: "";
+    position: absolute;
+    top: -2px;           /* 2px分だけ外側にはみ出させて枠線に見せる */
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: conic-gradient(
+      from var(--deg, 0deg) at center,
+      #00c3ff,
+      #4d0199,
+      #f300c6,
+      #00c3ff
+    );
+    border-radius: 14px; /* 土台より少し大きく */
+    z-index: -1;
+    animation: autoRotate 2s linear infinite;
+  }
+
+  /* 4. 動画のトリック：背後をボカしてネオンのように光らせる */
+  .ai-neon-box::after {
+    filter: blur(10px);  /* ここで発光エフェクト */
+    z-index: -2;
+  }
+
+  @property --deg {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+  /* 5. アニメーション（回転）の定義 */
+  @keyframes autoRotate {
+    to {
+      --deg: 360deg;
+    }
+  }
+
+  /* 元の見出しの余計な余白をリセット */
+  h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+</style>
