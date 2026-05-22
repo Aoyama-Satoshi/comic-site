@@ -3,7 +3,7 @@
 html,
 body {
   margin: 0;
-  background: rgb(143, 255, 123);
+  background-image: url(/images/mokume.jpeg);
   color: black;
   font-family: sans-serif;
 }
